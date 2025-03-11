@@ -13,7 +13,7 @@ class ClasesService{
     {
         $this->clasesRepository = $clasesRepository;
     }
-
+dwadawdawd
     public function getAllClases(): array
     {
         return $this->clasesRepository->findAll();
