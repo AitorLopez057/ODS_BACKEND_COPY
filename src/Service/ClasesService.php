@@ -19,3 +19,6 @@ class ClasesService{
         return $this->clasesRepository->findAll();
     }
 }dsdadsadsadsadsadwadsawdsadw
+
+
+dsadwadsa
