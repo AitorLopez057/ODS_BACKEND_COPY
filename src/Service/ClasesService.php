@@ -2,22 +2,40 @@
 
 namespace App\Service;
 
+use App\Repository\DimensionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\ClaseRepository;
-
 
 class ClasesService{
 
-    private ClaseRepository $clasesRepository;
+    private DimensionRepository $dimensionRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ClaseRepository $clasesRepository)
+    public function __construct(DimensionRepository $dimensionRepository, EntityManagerInterface $entityManager)
     {
-        $this->clasesRepository = $clasesRepository;
+        $this->dimensionRepository = $dimensionRepository;
+        $this->entityManager = $entityManager;
     }
     public function getAllClases(): array
     {
-        return $this->clasesRepository->findAll();
+        return $this->dimensionRepository->findAll();
+    }
+
+    public function updateDimension(int $id, array $data): JsonResponse
+    {
+        $dimension = $this->dimensionRepository->find($id);
+        if (!$dimension) {
+            return new JsonResponse(['message' => 'Dimensión no encontrada'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (isset($data['nombre'])) {
+            $dimension->setNombre($data['nombre']);
+        }
+     
+        $this->entityManager->flush();
+
+        return new JsonResponse(['message' => 'Iniciativa actualizada correctamente'], Response::HTTP_OK);
     }
 
     public function deleteIniciativa(int $id): JsonResponse
@@ -34,4 +52,5 @@ class ClasesService{
         
         return new JsonResponse(['message' => 'Iniciativa eliminada exitosamente'], Response::HTTP_OK);
     }
+
 }
